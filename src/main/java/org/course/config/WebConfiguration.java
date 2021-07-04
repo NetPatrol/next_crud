@@ -57,5 +57,8 @@ public class WebConfiguration implements WebMvcConfigurer{
 		registry.viewResolver(resolver);
 	}
 
-	
+//	@Bean
+//	public UserDetailsService getUserDetailsService(){
+//		return new UserDetailsServiceImpl();
+//	}
 }
