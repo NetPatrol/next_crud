@@ -3,7 +3,6 @@ package org.course.service;
 import org.course.dao.UserDao;
 import org.course.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Qualifier("UserDaoImpl")
+    @Autowired
     private final UserDao dao;
 
     @Autowired
@@ -35,6 +34,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User selectById(long id) {
         return dao.selectById(id);
+    }
+
+    @Override
+    @Transactional
+    public User selectByLogin(String login) {
+        return dao.selectByLogin(login);
     }
 
     @Override

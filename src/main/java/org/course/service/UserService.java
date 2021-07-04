@@ -8,6 +8,7 @@ public interface UserService {
     void save(User u);
     List<User> selectAll();
     User selectById(long id);
+    User selectByLogin(String login);
     void update(long id, User u);
     void delete(long id);
 }

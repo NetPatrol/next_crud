@@ -1,12 +1,20 @@
 package org.course.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
-@Table(name = "User")
-public class User implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "users")
+public class User implements Serializable, UserDetails{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,22 +29,61 @@ public class User implements Serializable {
     @Column(name = "age")
     private byte age;
 
-    public User() {
+    @Column(name = "login", unique = true)
+    private String login;
 
+    @Column(name = "password")
+    private String password;
+
+    @Transient
+    transient private String confirmPassword;
+
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
     }
 
-    public User(String name, String lastName, byte age) {
-        this.name = name;
-        this.lastName = lastName;
-        this.age = age;
+    @Override
+    public String getUsername() {
+        return login;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -52,7 +99,7 @@ public class User implements Serializable {
     }
 
     public void setLastName(String lastName) {
-            this.lastName = lastName;
+        this.lastName = lastName;
     }
 
     public byte getAge() {
@@ -63,26 +110,31 @@ public class User implements Serializable {
         this.age = age;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User users = (User) o;
-        return id == users.id && Objects.equals(name, users.name) && Objects.equals(lastName, users.lastName) && Objects.equals(age, users.age);
+    public String getLogin() {
+        return login;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, lastName, age);
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                '}';
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
