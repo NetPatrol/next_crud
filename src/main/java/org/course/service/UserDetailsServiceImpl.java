@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = service.selectByLogin(login);
+        User user = service.select(login);
         if (user == null) {
             throw new UsernameNotFoundException("Unknown login "+ login);
         } else {

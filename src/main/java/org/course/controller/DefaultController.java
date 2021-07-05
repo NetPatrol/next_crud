@@ -3,7 +3,6 @@ package org.course.controller;
 import org.course.model.User;
 import org.course.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,7 +16,7 @@ import java.util.List;
 @RequestMapping("")
 public class DefaultController {
 
-    @Qualifier("UserServiceImpl")
+    @Autowired
     private UserService service;
 
     @Autowired
@@ -47,7 +46,7 @@ public class DefaultController {
     public String admin(Principal principal, ModelMap modelMap, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
-        modelMap.addAttribute("users", service.selectAll());
+        modelMap.addAttribute("users", service.select());
         return "admin";
     }
 
@@ -55,7 +54,7 @@ public class DefaultController {
     public String user(Principal principal, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
-        model.addAttribute("user", service.selectByLogin(login));
+        model.addAttribute("user", service.select(login));
         return "user";
     }
 
@@ -74,7 +73,7 @@ public class DefaultController {
     @GetMapping("/update/{id}")
     public String getPasswordUpdateForm(@PathVariable long id, Model model) {
         model.addAttribute("login", login);
-        model.addAttribute("user", service.selectById(id));
+        model.addAttribute("user", service.select(id));
         model.addAttribute("newUser", new User());
         return "update";
     }
@@ -82,9 +81,9 @@ public class DefaultController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String update(@RequestParam("id") long id, @ModelAttribute User user, Model model) {
         if (user.getConfirmPassword().equals(user.getPassword())) {
-            service.update(id, user);
-            model.addAttribute("user", service.selectById(id));
-            return "redirect:login";
+            service.edit(id, user);
+            model.addAttribute("user", service.select(id));
+            return "redirect:user";
         } else {
             return "update";
         }
@@ -92,7 +91,7 @@ public class DefaultController {
 
     @RequestMapping(value = "edit-role", method = RequestMethod.POST)
     public String editRole(@RequestParam("id") long id, @RequestParam("role") String role) {
-        service.editRole(id, role);
+        service.edit(id, role);
         return "redirect:admin";
     }
 

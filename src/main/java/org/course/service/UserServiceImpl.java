@@ -26,32 +26,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> selectAll() {
-        return dao.selectAll();
+    public List<User> select() {
+        return dao.select();
     }
 
     @Override
     @Transactional
-    public User selectById(long id) {
-        return dao.selectById(id);
+    public User select(long id) {
+        return dao.select(id);
     }
 
     @Override
     @Transactional
-    public User selectByLogin(String login) {
-        return dao.selectByLogin(login);
+    public User select(String login) {
+        return dao.select(login);
     }
 
     @Override
     @Transactional
-    public void update(long id, User u) {
-       dao.update(id, u);
+    public void edit(long id, User u) {
+       dao.edit(id, u);
     }
 
+    @Override
     @Transactional
-    public void editRole(long id, String role) {
-        dao.editRole(id, role);
-    }
+    public void edit(long id, String role) { dao.edit(id, role); }
 
     @Override
     @Transactional

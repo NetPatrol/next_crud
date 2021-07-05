@@ -45,17 +45,17 @@ public class UserDaoImpl implements UserDao{
     @Override
     @Transactional
     @SuppressWarnings("unchecked")
-    public List<User> selectAll() {
+    public List<User> select() {
         return entityManager.createQuery("from User u").getResultList();
     }
 
     @Override
     @Transactional
-    public User selectById(long id){ return entityManager.find(User.class, id); }
+    public User select(long id){ return entityManager.find(User.class, id); }
 
     @Override
     @Transactional
-    public User selectByLogin(String login) {
+    public User select(String login) {
         User user = entityManager
                 .createQuery("SELECT u from User u join fetch u.roles WHERE u.login = :login", User.class)
                 .setParameter("login", login).getSingleResult();
@@ -67,8 +67,8 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     @Transactional
-    public void update(long id, User upd) {
-        User user = selectById(id);
+    public void edit(long id, User upd) {
+        User user = select(id);
         if (!user.getPassword().equals(upd.getPassword())) {
             user.setPassword(passwordEncoder.encode(upd.getPassword()));
             entityManager.merge(user);
@@ -77,8 +77,8 @@ public class UserDaoImpl implements UserDao{
     }
     @Override
     @Transactional
-    public void editRole(long id, String role) {
-        User user = selectById(id);
+    public void edit(long id, String role) {
+        User user = select(id);
         Set<Role> roles = new HashSet<>();
 
         if (role.equals("Admin")) {
@@ -95,6 +95,6 @@ public class UserDaoImpl implements UserDao{
     @Override
     @Transactional
     public void delete(long id) {
-        entityManager.remove(selectById(id));
+        entityManager.remove(select(id));
     }
 }
