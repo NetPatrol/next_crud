@@ -37,7 +37,7 @@
 <div id="container h-100">
     <div class="row h-100 justify-content-center align-items-center mx-auto my-5">
         <div class="col-md-3">
-            <h1 class="display-2">Регистрация</h1>
+            <h1 class="display-2">REGISTRATION</h1>
         <form class="form" th:method="POST" th:action="@{/registration}" th:object="${user}" >
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">Name: </span>
@@ -48,13 +48,7 @@
                 <span class="input-group-text" id="basic-addon2">Last name: </span>
                 <input class="form-control shadow-lg rounded" placeholder="Your last name" aria-label="Last name" aria-describedby="basic-addon1" th:field="*{lastName}" value="lastName"/>
             </div>
-
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon3">Age: </span>
-                <input class="form-control shadow-lg rounded" placeholder="Your age" aria-label="Age" aria-describedby="basic-addon1" th:field="*{age}" value="age"/>
-            </div>
-
-            <p>Укажите логин и пароль для регистрации</p>
+            <hr>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon4">Login: </span>
                 <input class="form-control shadow-lg rounded" placeholder="Login" aria-label="login" aria-describedby="basic-addon1" th:field="*{login}" value="login"/>
@@ -70,8 +64,8 @@
                 <input class="form-control shadow-lg rounded" placeholder="Password" aria-label="password" aria-describedby="basic-addon1" th:field="*{confirmPassword}" value="password"/>
             </div>
 
-            <td><input type="submit" class="btn btn-primary btn-sm shadow-lg rounded" role="button" value="Регистрация"/></td>
-            <td><input type="reset" class="btn btn-primary btn-sm shadow-lg rounded" role="button" value="Сбросить"/></td>
+            <td><input type="submit" class="btn btn-primary btn-sm shadow-lg rounded" role="button" value="Registry"/></td>
+            <td><input type="reset" class="btn btn-primary btn-sm shadow-lg rounded" role="button" value="Reset"/></td>
                 <td><a href="javascript:history.back()" class="btn btn-primary btn-sm m" role="button">Back</a></td>
         </form>
         </div>

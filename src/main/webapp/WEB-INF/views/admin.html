@@ -34,8 +34,7 @@
 </nav>
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center mx-auto my-5">
-        <div class="col-md-10">
-            <div class="row align-items-start">
+        <div class="row align-items-center">
             <table class="table table-hover table-sm shadow-lg rounded">
                 <thead>
                 <tr class="head-tr table-dark">
@@ -43,27 +42,79 @@
                     <td><b><span th:text="'Name'"></span></b></td>
                     <td><b><span th:text="'Last name'"></span></b></td>
                     <td><b><span th:text="'Login'"></span></b></td>
-                    <td>
+                    <td><b><span th:text="'Edit role'"></span></b></td>
                     <td><b><span th:text="'Edit password'"></span></b></td>
                     <td><b><span th:text="'Delete profile'"></span></b></td>
                 </tr>
                 </thead>
+                <tbody>
                 <tr class="table-light" th:each="u, itemStat : ${users}">
                     <td><span th:text="${u.getId()}" hidden></span></td>
                     <td><span th:text="${u.getName()}"></span></td>
                     <td><span th:text="${u.getLastName()}"> </span></td>
                     <td><span th:text="${u.getLogin()}"> </span></td>
-                    <td>
-                    <td><a th:href="@{'/update/{id}'(id=${u.getId()})}" class="btn btn-primary btn-sm" role="button" th:text="edit"></a></td>
-                    <td><form th:method="POST" th:action="@{'delete?id={id}'(id=${u.getId()})}" th:object="${u}"><input type="submit" class="btn btn-primary btn-sm" role="button" th:value="delete"/></form></td>
+                    <td><form method="POST" th:action="@{'edit-role?id={id}'(id=${u.getId()})}" th:object="${u}">
+                        <label for="id"></label>
+                        <select class="form-select-sm" id="id" name="role">
+                            <option value="Admin">Admin</option>
+                            <option value="User" selected>User</option>
+                        </select>
+                        <input class="btn btn-primary btn-sm" role="button" type="submit">
+                    </form></td>
+                    <td><b><span><a th:href="@{'update/{id}'(id=${u.getId()})}" class="btn btn-primary btn-sm" role="button">edit password</a></span></b></td>
+                    <td><b><span><form th:method="POST" th:action="@{'delete?id={id}'(id=${u.getId()})}" th:object="${u}">
+                        <input type="submit" class="btn btn-primary btn-sm" role="button" th:value="delete"/>
+                    </form></span></b></td>
                 </tr>
+                </tbody>
             </table>
+<!--            <table class="table table-hover table-sm shadow-lg rounded">-->
+<!--            <thead>-->
+<!--            <tr class="head-tr table-dark">-->
+<!--                <td><b><span th:text="'Id'" hidden></span></b></td>-->
+<!--                <td><b><span th:text="'Name'"></span></b></td>-->
+<!--                <td><b><span th:text="'Last name'"></span></b></td>-->
+<!--                <td><b><span th:text="'Login'"></span></b></td>-->
+<!--                <td>-->
+<!--                    <table>-->
+<!--                        <tr><b><span th:text="'Edit role'"></span></b>-->
+<!--                            <td></td>-->
+<!--                        </tr>-->
+<!--                        <tr></tr>-->
+<!--                    </table>-->
+<!--                </td>-->
+<!--                <td><b><span th:text="'Edit password'"></span></b></td>-->
+<!--                <td><b><span th:text="'Delete profile'"></span></b></td>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr class="table-light" th:each="u, itemStat : ${users}">-->
+<!--                <td><span th:text="${u.getId()}" hidden></span></td>-->
+<!--                <td><span th:text="${u.getName()}"></span></td>-->
+<!--                <td><span th:text="${u.getLastName()}"> </span></td>-->
+<!--                <td><span th:text="${u.getLogin()}"> </span></td>-->
+<!--                <td>-->
+<!--                    <form th:method="POST" th:action="@{'edit-role?id={id}'(id=${u.getId()})}" th:object="${u}">-->
+<!--                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">-->
+<!--                            <option selected>Open this select menu</option>-->
+<!--                            <option th:value="1">Admin</option>-->
+<!--                            <option th:value="2">User</option>-->
+<!--                        </select>-->
+<!--                        <input type="submit" class="btn btn-primary btn-sm" role="button" th:value="edit role"/>-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--                <td><a th:href="@{'/update/{id}'(id=${u.getId()})}" class="btn btn-primary btn-sm" role="button">edit password</a></td>-->
+<!--                <td><form th:method="POST" th:action="@{'delete?id={id}'(id=${u.getId()})}" th:object="${u}">-->
+<!--                        <input type="submit" class="btn btn-primary btn-sm" role="button" th:value="delete"/>-->
+<!--                    </form></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
         </div>
-            <div class="row align-items-start">
-                <div class="col-md-6">
-                    <td><a th:href="@{/admin#}" class="btn btn-primary btn-sm" role="button">Update page</a></td>
-                    <td><a th:href="@{/registration}" class="btn btn-primary btn-sm" role="button">Create new profile</a></td>
-                </div>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <td><a th:href="@{/admin#}" class="btn btn-primary btn-sm" role="button">Update page</a></td>
+                <td><a th:href="@{/registration}" class="btn btn-primary btn-sm" role="button">Create new profile</a></td>
             </div>
         </div>
     </div>

@@ -75,6 +75,22 @@ public class UserDaoImpl implements UserDao{
             entityManager.flush();
         }
     }
+    @Override
+    @Transactional
+    public void editRole(long id, String role) {
+        User user = selectById(id);
+        Set<Role> roles = new HashSet<>();
+
+        if (role.equals("Admin")) {
+            roles.add(roleDao.getRole(1));
+        } else {
+            roles.add(roleDao.getRole(2));
+        }
+
+        user.setRoles(roles);
+        entityManager.merge(user);
+        entityManager.flush();
+    }
 
     @Override
     @Transactional

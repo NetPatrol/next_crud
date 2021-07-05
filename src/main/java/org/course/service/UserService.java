@@ -10,5 +10,6 @@ public interface UserService {
     User selectById(long id);
     User selectByLogin(String login);
     void update(long id, User u);
+    void editRole(long id, String role);
     void delete(long id);
 }

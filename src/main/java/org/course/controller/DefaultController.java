@@ -88,7 +88,12 @@ public class DefaultController {
         } else {
             return "update";
         }
+    }
 
+    @RequestMapping(value = "edit-role", method = RequestMethod.POST)
+    public String editRole(@RequestParam("id") long id, @RequestParam("role") String role) {
+        service.editRole(id, role);
+        return "redirect:admin";
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.POST)

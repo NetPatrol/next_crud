@@ -48,6 +48,11 @@ public class UserServiceImpl implements UserService {
        dao.update(id, u);
     }
 
+    @Transactional
+    public void editRole(long id, String role) {
+        dao.editRole(id, role);
+    }
+
     @Override
     @Transactional
     public void delete(long id) {

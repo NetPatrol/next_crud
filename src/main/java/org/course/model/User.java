@@ -26,9 +26,6 @@ public class User implements Serializable, UserDetails{
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "age")
-    private byte age;
-
     @Column(name = "login", unique = true)
     private String login;
 
@@ -100,14 +97,6 @@ public class User implements Serializable, UserDetails{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public byte getAge() {
-        return age;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
     }
 
     public String getLogin() {
