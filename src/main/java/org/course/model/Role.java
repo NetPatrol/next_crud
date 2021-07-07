@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +27,11 @@ public class Role implements Serializable, GrantedAuthority {
     public Role(long id, String role) {
         this.id = id;
         this.role = role;
+    }
+
+    @Override
+    public String getAuthority() {
+        return role;
     }
 
     public long getId() {
@@ -50,11 +56,6 @@ public class Role implements Serializable, GrantedAuthority {
 
     public void setUsers(Set<User> users) {
         this.users = users;
-    }
-
-    @Override
-    public String getAuthority() {
-        return role;
     }
 }
 

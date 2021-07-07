@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("")
 public class DefaultController {
 
-    @Autowired
     private UserService service;
 
     @Autowired
@@ -47,6 +46,7 @@ public class DefaultController {
         this.login = principal.getName();
         model.addAttribute("login", login);
         modelMap.addAttribute("users", service.select());
+        model.addAttribute("usr", service.select(login));
         return "admin";
     }
 
@@ -73,6 +73,7 @@ public class DefaultController {
     @GetMapping("/update/{id}")
     public String getPasswordUpdateForm(@PathVariable long id, Model model) {
         model.addAttribute("login", login);
+        model.addAttribute("usr", service.select(login));
         model.addAttribute("user", service.select(id));
         model.addAttribute("newUser", new User());
         return "update";

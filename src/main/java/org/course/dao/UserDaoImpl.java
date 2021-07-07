@@ -1,5 +1,6 @@
 package org.course.dao;
 
+import lombok.SneakyThrows;
 import org.course.model.Role;
 import org.course.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,26 +28,34 @@ public class UserDaoImpl implements UserDao{
     private RoleDao roleDao;
 
 
+
     @Override
+    @SneakyThrows
     @Transactional
-    public void save(User u) {
-        if (!ObjectUtils.isEmpty(u) && !entityManager.contains(u)) {
-            Set<Role> roles = new HashSet<>();
-            roles.add(roleDao.getRole(2));
-            u.setPassword(passwordEncoder.encode(u.getPassword()));
-            u.setRoles(roles);
-            entityManager.persist(u);
-            entityManager.flush();
+    public void save(User user) {
+        if (!ObjectUtils.isEmpty(user.getLogin())
+                && !entityManager.contains(user.getLogin())
+                && !entityManager.contains(user.getPassword())
+                && !entityManager.contains(user.getConfirmPassword())) {
+            if (user.getPassword().equals(user.getConfirmPassword())) {
+                Set<Role> roles = new HashSet<>();
+                roles.add(roleDao.getRole(2));
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                user.setRoles(roles);
+                entityManager.persist(user);
+                entityManager.flush();
+            } else {
+                throw new Exception("Проверьте правильность ввода пароля");
+            }
         } else {
-            System.out.println("Такой пользователь уже есть");
+            throw new Exception("Это имя уже занято");
         }
     }
 
     @Override
     @Transactional
-    @SuppressWarnings("unchecked")
     public List<User> select() {
-        return entityManager.createQuery("from User u").getResultList();
+        return entityManager.createQuery("from User u join fetch u.roles", User.class).getResultList();
     }
 
     @Override
@@ -57,8 +66,8 @@ public class UserDaoImpl implements UserDao{
     @Transactional
     public User select(String login) {
         User user = entityManager
-                .createQuery("SELECT u from User u join fetch u.roles WHERE u.login = :login", User.class)
-                .setParameter("login", login).getSingleResult();
+            .createQuery("SELECT u from User u join fetch u.roles WHERE u.login = :login", User.class)
+            .setParameter("login", login).getSingleResult();
         if (user.getLogin().isEmpty()) {
              return null;
         }
@@ -80,13 +89,13 @@ public class UserDaoImpl implements UserDao{
     public void edit(long id, String role) {
         User user = select(id);
         Set<Role> roles = new HashSet<>();
-
-        if (role.equals("Admin")) {
-            roles.add(roleDao.getRole(1));
+        if (role.equals("admin")) {
+            roles.add(roleDao.getRole(1)); //admin
+        } else if (role.equals("user")) {
+            roles.add(roleDao.getRole(2)); //user
         } else {
-            roles.add(roleDao.getRole(2));
+            roles.add(roleDao.getRole(3)); //guest
         }
-
         user.setRoles(roles);
         entityManager.merge(user);
         entityManager.flush();

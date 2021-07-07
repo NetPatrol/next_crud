@@ -2,13 +2,17 @@ package org.course.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
 
 @Entity
 @AllArgsConstructor
@@ -20,18 +24,23 @@ public class User implements Serializable, UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NonNull
     @Column(name = "name")
     private String name;
 
+    @NonNull
     @Column(name = "lastName")
     private String lastName;
 
+    @NonNull
     @Column(name = "login", unique = true)
     private String login;
 
+    @NonNull
     @Column(name = "password")
     private String password;
 
+    @NonNull
     @Transient
     transient private String confirmPassword;
 
@@ -41,8 +50,12 @@ public class User implements Serializable, UserDetails{
     private Set<Role> roles;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+    public List<GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        }
+        return authorities;
     }
 
     @Override
@@ -87,7 +100,7 @@ public class User implements Serializable, UserDetails{
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -95,7 +108,7 @@ public class User implements Serializable, UserDetails{
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@NonNull String lastName) {
         this.lastName = lastName;
     }
 
@@ -103,11 +116,11 @@ public class User implements Serializable, UserDetails{
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(@NonNull String login) {
         this.login = login;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NonNull String password) {
         this.password = password;
     }
 
@@ -115,7 +128,7 @@ public class User implements Serializable, UserDetails{
         return confirmPassword;
     }
 
-    public void setConfirmPassword(String confirmPassword) {
+    public void setConfirmPassword(@NonNull String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
 

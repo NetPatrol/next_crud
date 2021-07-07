@@ -13,7 +13,6 @@ public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     private void initRole() {
         Role admin = new Role(1L, "ADMIN");
         Role user = new Role(2L, "ADMIN");

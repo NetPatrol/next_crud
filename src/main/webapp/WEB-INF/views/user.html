@@ -34,7 +34,11 @@
                          height="22"
                          alt=""
                          loading="lazy"/>
-                    <strong class="d-none d-sm-block ms-1" th:text="${login}"></strong>
+                    <strong class="d-none d-sm-block ms-1" th:each="role: ${user.roles}" th:switch="${role.role}">
+                        <span th:case="'ROLE_ADMIN'" th:text="${'Welcome, ' + login+'! Your status: Administrator'}"></span>
+                        <span th:case="'ROLE_USER'" th:text="${'Welcome, ' + login+'! Glad to see you again'}"></span>
+                        <span th:case="''" th:text="${'Welcome, Unknown! You are not authorized'}"></span>
+                    </strong>
                 </a>
             </li>
         </ul>

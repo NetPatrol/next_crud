@@ -39,8 +39,8 @@
                          height="22"
                          alt=""
                          loading="lazy"/>
-                    <span sec:authentication property="principal.authorities"></span>
-                    <strong class="d-none d-sm-block ms-1" th:text="${login}"></strong>
+                        <span th:if="${login} == null" th:text="${'Welcome, Guest! Glad to see you again'}"></span>
+                        <span th:if="${login} != null" th:text="${'Welcome, ' + login+'! Glad to see you again'}"></span>
                 </a>
             </li>
         </ul>
@@ -48,7 +48,7 @@
 </nav>
 <div class="container">
     <div class="row h-100 justify-content-center align-items-center mx-auto my-5">
-        <div class="col-md-10 text-center p-5 text-center mb-5 text-white">
+        <div class="col-md-10 p-5 text-center mb-5 text-white">
             <th:block th:each="msg : ${messages}">
                 <h1 class="display-6" th:text="${msg}"></h1>
             </th:block>
