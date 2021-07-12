@@ -39,7 +39,7 @@ public class DefaultController {
         this.phoneService = phone;
     }
 
-    String login;
+    private String login;
 
     @GetMapping(value = "/")
     public String getWelcomePage(ModelMap model) {
@@ -74,9 +74,6 @@ public class DefaultController {
         this.login = principal.getName();
         model.addAttribute("login", login);
         model.addAttribute("account", userService.selectForAutorize(login));
-        model.addAttribute("phone", new Phone());
-        model.addAttribute("user", new User());
-
         return "user";
     }
 
@@ -103,7 +100,7 @@ public class DefaultController {
         } catch (Exception e) {
             throw new Exception("Ошибка создания профиля");
         }
-        return "#";
+        return  !login.isEmpty() ? "redirect:/admin" : "redirect:index";
     }
 
 
@@ -111,14 +108,15 @@ public class DefaultController {
     public String getPasswordUpdateForm(@PathVariable long id, Model model) {
         model.addAttribute("user", userService.selectById(User.class, id));
         model.addAttribute("create", new User());
-        return "update";
+        return "modal";
     }
 
     @RequestMapping(value = "add-phone", method = RequestMethod.POST)
-    public void add(@RequestParam("id") long id, @ModelAttribute User user, @ModelAttribute Phone phone) {
+    public String add(@RequestParam("id") long id, @ModelAttribute User user, @ModelAttribute Phone phone) {
         User u = userService.selectById(User.class, user.getId());
         u.setPhones(userService.set((Phone) phoneService.selectByData(Phone.class, phone.getPhone())));
         userService.bind(u);
+        return  !login.isEmpty() ? "redirect:/admin" : "redirect:index";
     }
 
     @RequestMapping(value = "edit-password", method = RequestMethod.POST)

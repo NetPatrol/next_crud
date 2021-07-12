@@ -19,16 +19,16 @@ public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> 
     public List<T> selectAll(Class<T> cls) {
         if (cls == User.class) {
             return entityManager
-                    .createQuery("from User u join fetch u.roles join fetch u.phones", cls)
-                    .getResultList();
+            .createQuery("from User u join fetch u.roles join fetch u.phones", cls)
+            .getResultList();
         } else if (cls == Role.class) {
             return entityManager
-                    .createQuery("from Role r join fetch r.users", cls)
-                    .getResultList();
+            .createQuery("from Role r join fetch r.users", cls)
+            .getResultList();
         } else if (cls == Phone.class) {
             return entityManager
-                    .createQuery("from Phone p join fetch p.users", cls)
-                    .getResultList();
+            .createQuery("from Phone p join fetch p.users", cls)
+            .getResultList();
         }
         return null;
     }
@@ -42,16 +42,16 @@ public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> 
     public Model selectByData(Class<T> cls, String s) {
         if (cls == User.class) {
             return entityManager.createQuery("from User u WHERE u.login = :login", cls)
-                    .setParameter("login", s)
-                    .getSingleResult();
+            .setParameter("login", s)
+            .getSingleResult();
         } else if (cls == Role.class) {
             return entityManager.createQuery("from Role r WHERE r.role = :role", cls)
-                    .setParameter("role", s)
-                    .getSingleResult();
+            .setParameter("role", s)
+            .getSingleResult();
         } else if (cls == Phone.class) {
             return entityManager.createQuery("from Phone p WHERE p.phone = :phone", cls)
-                    .setParameter("phone", s)
-                    .getSingleResult();
+            .setParameter("phone", s)
+            .getSingleResult();
         }
         return null;
     }
