@@ -1,31 +1,63 @@
-<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="admin-edit-modal">
-  <div class="modal fade" id="staticBackdrop" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="admin-edit-modal">
+  <div class="modal fade"
+       id="staticBackdrop"
+       data-mdb-backdrop="static"
+       data-mdb-keyboard="false"
+       tabindex="-1"
+       aria-labelledby="staticBackdropLabel"
+       aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title fw-lighter" id="staticBackdropLabel" th:text="${'Edit Profile'}"></h5>
-          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-lighter"
+              id="staticBackdropLabel"
+              th:text="${'Edit Profile'}">
+          </h5>
+          <button type="button"
+                  class="btn-close"
+                  data-mdb-dismiss="modal"
+                  aria-label="Close">
+          </button>
         </div>
-
         <div class="modal-body">
-          <form th:method="POST" th:action="@{registry}" th:id="registry">
-          <div th:replace="~{/registry::registry}"></div>
+          <form th:method="POST"
+                th:action="@{registry}"
+                th:id="registry">
+          <div th:replace="~{/registry::registry}">
+          </div>
           </form>
         </div>
-
         <div class="modal-footer">
             <table>
-              <form th:method="POST" th:action="@{'delete?id={id}'(id=${user.getId()})}" th:id="delete" th:object="${account}">
+              <form th:method="POST"
+                    th:action="@{'delete?id={id}'(id=${user.getId()})}"
+                    th:id="delete"
+                    th:object="${account}">
               </form>
               <tr>
                 <td class="p-1">
-                  <button type="reset" class="btn btn-primary" th:form="registry">Clean</button>
+                  <button type="reset"
+                          class="btn btn-primary"
+                          th:form="registry">
+                    Clean
+                  </button>
                 </td>
                 <td class="p-1">
-                  <button class="btn btn-primary" type="submit" th:form="registry">Apply</button>
+                  <button class="btn btn-primary"
+                          type="submit"
+                          th:form="registry">
+                    Apply
+                  </button>
                 </td>
                 <td class="p-1">
-                  <button th:form="delete" type="submit" class="btn btn-primary" role="button">Delete</button>
+                  <button
+                          th:form="delete"
+                          type="submit"
+                          class="btn btn-primary"
+                          role="button">
+                    Delete
+                  </button>
                 </td>
               </tr>
             </table>
@@ -35,23 +67,35 @@
   </div>
 </th:block>
 
-
-
-
-
 <!--Registry page-->
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="admin-registry-modal">
-  <div class="modal fade" id="staticBackdrop1" data-mdb-backdrop="static" data-mdb-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade"
+       id="staticBackdrop1"
+       data-mdb-backdrop="static"
+       data-mdb-keyboard="false"
+       tabindex="-1"
+       aria-labelledby="staticBackdropLabel"
+       aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title fw-lighter" id="staticBackdropLabel1" th:text="${'Create new account'}"></h5>
-          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-lighter"
+              id="staticBackdropLabel1"
+              th:text="${'Create new account'}">
+          </h5>
+          <button type="button"
+                  class="btn-close"
+                  data-mdb-dismiss="modal"
+                  aria-label="Close">
+          </button>
         </div>
 
         <div class="modal-body">
-          <form th:method="POST" th:action="@{registry}" th:id="registry">
-          <div th:replace="~{/registry::registry}"></div>
+          <form th:method="POST"
+                th:action="@{registry}"
+                th:id="registry">
+          <div th:replace="~{/registry::registry}">
+          </div>
           </form>
         </div>
 
@@ -59,16 +103,21 @@
               <table>
                 <tr>
                   <td class="p-3">
-                    <button type="reset" class="btn btn-primary" th:form="registry">Clean</button>
+                    <button type="reset"
+                            class="btn btn-primary"
+                            th:form="registry">
+                      Clean
+                    </button>
                   </td>
                   <td>
-                    <button class="btn btn-primary" type="submit" th:form="registry">Registry</button>
+                    <button class="btn btn-primary"
+                            type="submit"
+                            th:form="registry">
+                      Registry
+                    </button>
                   </td>
                 </tr>
               </table>
-          <!--        <form th:method="POST" th:action="@{'delete?id={id}'(id=${user.getId()})}" th:object="${user}">-->
-          <!--          <input type="submit" class="btn btn-primary btn-sm" role="button" th:value="Delete"/>-->
-          <!--        </form>-->
         </div>
       </div>
     </div>

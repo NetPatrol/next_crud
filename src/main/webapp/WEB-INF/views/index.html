@@ -4,10 +4,18 @@
     <div class="row h-100 justify-content-center align-items-center mx-auto my-5">
         <div class="col-md-12 p-5 text-center mb-5">
             <th:block th:each="msg : ${messages}">
-                <h1 class="display-6" th:text="${msg}"></h1>
+                <h1 class="display-6"
+                    th:text="${msg}">
+                </h1>
             </th:block>
-            <button th:if="${login} == null" type="button" class="btn btn-outline-danger btn-lg" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop1" th:text="${'Registry'}"></button>
-            <div th:replace="~{fragment/modal::admin-registry-modal}"></div>
+            <button th:if="${login} == null"
+                    type="button"
+                    class="btn btn-outline-danger btn-lg"
+                    data-mdb-toggle="modal"
+                    data-mdb-target="#staticBackdrop1"
+                    th:text="${'Registry'}"></button>
+            <div th:replace="~{fragment/modal::admin-registry-modal}">
+            </div>
         </div>
     </div>
 </div>

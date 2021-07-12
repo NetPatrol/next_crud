@@ -1,41 +1,75 @@
-<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="admin-panel">
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="admin-panel">
   <h1>Administration panel</h1>
-<ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="home-tab0" data-mdb-toggle="tab" data-mdb-target="#home0" type="button" role="tab" aria-controls="home" aria-selected="true">
+<ul class="nav nav-tabs mb-3"
+    id="myTab0" role="tablist">
+  <li class="nav-item"
+      role="presentation">
+    <button class="nav-link active"
+            id="home-tab0"
+            data-mdb-toggle="tab"
+            data-mdb-target="#home0"
+            type="button" role="tab"
+            aria-controls="home"
+            aria-selected="true">
       Accounts table
     </button>
   </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="profile-tab0" data-mdb-toggle="tab" data-mdb-target="#profile0" type="button" role="tab" aria-controls="profile" aria-selected="false">
+  <li class="nav-item"
+      role="presentation">
+    <button class="nav-link"
+            id="profile-tab0"
+            data-mdb-toggle="tab"
+            data-mdb-target="#profile0"
+            type="button"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false">
       Add new user
     </button>
   </li>
 </ul>
+<div class="tab-content"
+     id="myTabContent0">
+  <div class="tab-pane fade show active"
+       id="home0"
+       role="tabpanel"
+       aria-labelledby="home-tab0">
+    <div th:replace="~{fragment/list-profile::list-profile}">
 
-
-<div class="tab-content" id="myTabContent0">
-
-  <div class="tab-pane fade show active" id="home0" role="tabpanel" aria-labelledby="home-tab0">
-    <div th:replace="~{fragment/list-profile::list-profile}"></div>
+    </div>
   </div>
-
-  <div class="tab-pane fade" id="profile0" role="tabpanel" aria-labelledby="profile-tab0">
+  <div class="tab-pane fade"
+       id="profile0"
+       role="tabpanel"
+       aria-labelledby="profile-tab0">
     <div class="col-md-6 offset-md-3 shadow-lg p-3 mb-5 bg-white rounded">
       <div class="modal-header">
-        <h5 class="modal-title fw-lighter" id="staticBackdropLabel" th:text="${'Create new account'}"></h5>
+        <h5 class="modal-title fw-lighter"
+            id="staticBackdropLabel"
+            th:text="${'Create new account'}"></h5>
       </div>
-      <form th:method="POST" th:action="@{registry}" th:id="registry">
+      <form th:method="POST"
+            th:action="@{registry}"
+            th:id="registry">
       <div th:replace="~{/registry::registry}"></div>
       </form>
       <div class="modal-footer">
           <table>
             <tr>
               <td class="p-3">
-                <button type="reset" class="btn btn-primary" th:form="registry">Clean</button>
+                <button type="reset"
+                        class="btn btn-primary"
+                        th:form="registry">
+                  Clean
+                </button>
               </td>
               <td>
-                <button class="btn btn-primary" type="submit" th:form="registry">Registry</button>
+                <button class="btn btn-primary"
+                        type="submit"
+                        th:form="registry">
+                  Registry
+                </button>
               </td>
             </tr>
           </table>
