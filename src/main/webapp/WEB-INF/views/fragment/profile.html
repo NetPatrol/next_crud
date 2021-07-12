@@ -1,0 +1,43 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="profile">
+<!--    <table class="table table-hover table-sm shadow-lg rounded my-5">-->
+<!--        <thead>-->
+<!--        <tr class="head-tr table-dark">-->
+<!--            <td><b><span th:text="'Id'" hidden></span></b></td>-->
+<!--            <td><b><span th:text="'Name'"></span></b></td>-->
+<!--            <td><b><span th:text="'Last name'"></span></b></td>-->
+<!--            <td><b><span th:text="'Login'"></span></b></td>-->
+<!--            <td><b><span th:text="'Edit password'"></span></b></td>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tr class="table-light">-->
+<!--            <td><span th:text="${account.id}" hidden></span></td>-->
+<!--            <td><span th:text="${account.name}"></span></td>-->
+<!--            <td><span th:text="${account.lastName}"></span></td>-->
+<!--            <td><span th:text="${account.login}"></span></td>-->
+<!--            <td><a th:href="@{update/{id}(id=${account.id})}" class="btn btn-primary btn-sm" role="button">Edit password</a></td>-->
+<!--        </tr>-->
+<!--    shadow-lg p-3 mb-5 bg-white rounded-->
+<!--    </table>-->
+    <div class="col-md-6 offset-md-3">
+        <div class="row my-5" >
+            <div class="card">
+                <div class="card-header">
+                    <h5 th:text="${account.getName} +' '+ ${account.getLastName}"></h5>
+                    <h6 th:text="${'status: online'}"></h6>
+                </div>
+            </div>
+        </div>
+        <div class="row my-5">
+            <div class="card">
+                <img src="https://mdbootstrap.com/img/Photos/Slides/img%20(15).jpg" class="card-img-top" alt="..."/>
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

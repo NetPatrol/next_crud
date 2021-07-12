@@ -1,14 +1,15 @@
-package org.course.model;
+package org.course.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.course.model.Model;
+import org.course.model.permission.Role;
+import org.course.model.phone.Phone;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,36 +19,37 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User implements Serializable, UserDetails{
+public class User extends Model implements UserDetails{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NonNull
+
     @Column(name = "name")
     private String name;
 
-    @NonNull
     @Column(name = "lastName")
     private String lastName;
 
-    @NonNull
     @Column(name = "login", unique = true)
     private String login;
 
-    @NonNull
     @Column(name = "password")
     private String password;
 
-    @NonNull
     @Transient
     transient private String confirmPassword;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(name = "user_phones", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "phone_id", referencedColumnName = "id"))
+    private Set<Phone> phones;
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
@@ -100,7 +102,7 @@ public class User implements Serializable, UserDetails{
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -108,19 +110,27 @@ public class User implements Serializable, UserDetails{
         return lastName;
     }
 
-    public void setLastName(@NonNull String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Set<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(Set<Phone> phones) {
+        this.phones = phones;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public void setLogin(@NonNull String login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
-    public void setPassword(@NonNull String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -128,7 +138,7 @@ public class User implements Serializable, UserDetails{
         return confirmPassword;
     }
 
-    public void setConfirmPassword(@NonNull String confirmPassword) {
+    public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
 

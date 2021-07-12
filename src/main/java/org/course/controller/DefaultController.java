@@ -1,8 +1,13 @@
 package org.course.controller;
 
-import org.course.model.User;
-import org.course.service.UserService;
+import org.course.dao.dao.descendants.RoleDao;
+import org.course.model.permission.Role;
+import org.course.model.phone.Phone;
+import org.course.model.user.User;
+import org.course.service.phone.PhoneService;
+import org.course.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -16,23 +21,35 @@ import java.util.List;
 @RequestMapping("")
 public class DefaultController {
 
-    private UserService service;
-
+    private final RoleDao roleService;
     @Autowired
-    public void setService(UserService service) {
-        this.service = service;
+    public DefaultController(@Qualifier("roleMySqlDaoImpl") RoleDao roleService) {
+        this.roleService = roleService;
     }
 
-    private String login;
+    private UserService userService;
+    @Autowired
+    public void setUserService(@Qualifier("userServiceImpl") UserService userService) {
+        this.userService = userService;
+    }
+
+    private PhoneService phoneService;
+    @Autowired
+    public void setService(@Qualifier("phoneServiceImpl") PhoneService phone) {
+        this.phoneService = phone;
+    }
+
+    String login;
 
     @GetMapping(value = "/")
-    public String printWelcome(ModelMap model) {
+    public String getWelcomePage(ModelMap model) {
         List<String> messages = new ArrayList<>();
         messages.add("Hello!");
-        messages.add("I'm Spring MVC-SECURITY application");
-        messages.add("5.2.0 version by sep'19 ");
-        model.addAttribute("login", login);
+        messages.add("Spring MVC-SECURITY application");
         model.addAttribute("messages", messages);
+        model.addAttribute("login", login);
+        model.addAttribute("phone", new Phone());
+        model.addAttribute("user", new User());
         return "index";
     }
 
@@ -41,64 +58,92 @@ public class DefaultController {
         return "login";
     }
 
-    @GetMapping("/admin")
-    public String admin(Principal principal, ModelMap modelMap, Model model) {
+    @GetMapping(value = "/admin")
+    public String getAdminPage(Principal principal, ModelMap modelMap, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
-        modelMap.addAttribute("users", service.select());
-        model.addAttribute("usr", service.select(login));
+        model.addAttribute("account", userService.selectForAutorize(login));
+        modelMap.addAttribute("accounts", userService.selectAll(User.class));
+        model.addAttribute("user", new User());
+        model.addAttribute("phone", new Phone());
         return "admin";
     }
 
-    @GetMapping("/user")
-    public String user(Principal principal, Model model) {
+    @GetMapping(value = "/user")
+    public String getUserPage(Principal principal, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
-        model.addAttribute("user", service.select(login));
+        model.addAttribute("account", userService.selectForAutorize(login));
+        model.addAttribute("phone", new Phone());
+        model.addAttribute("user", new User());
+
         return "user";
     }
 
-    @GetMapping("/registration")
-    public String getRegistrationPage(Model model) {
+    @GetMapping(value = "/registry")
+    public String getRegistryPage(Model model) {
+        model.addAttribute("phone", new Phone());
         model.addAttribute("user", new User());
-        return "registration";
+        return "modal";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("user") User user) {
-        service.save(user);
-        return "redirect:admin";
+    @RequestMapping(value = "registry", method = RequestMethod.POST)
+    public String registration(@ModelAttribute User user,
+                             @ModelAttribute Phone phone, Model model) throws Exception {
+        model.addAttribute("phone", new Phone());
+        model.addAttribute("user", new User());
+        try {
+            if (user.getPassword().equals(user.getConfirmPassword())) {
+                userService.save(user);
+                phoneService.save(phone);
+            }
+            User u = (User) userService.selectByData(User.class, user.getUsername());
+            u.setPhones(userService.set((Phone) phoneService.selectByData(Phone.class, phone.getPhone())));
+            userService.bind(u);
+        } catch (Exception e) {
+            throw new Exception("Ошибка создания профиля");
+        }
+        return "#";
     }
 
-    @GetMapping("/update/{id}")
+
+    @GetMapping(value = "/update/{id}")
     public String getPasswordUpdateForm(@PathVariable long id, Model model) {
-        model.addAttribute("login", login);
-        model.addAttribute("usr", service.select(login));
-        model.addAttribute("user", service.select(id));
-        model.addAttribute("newUser", new User());
+        model.addAttribute("user", userService.selectById(User.class, id));
+        model.addAttribute("create", new User());
         return "update";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(@RequestParam("id") long id, @ModelAttribute User user, Model model) {
+    @RequestMapping(value = "add-phone", method = RequestMethod.POST)
+    public void add(@RequestParam("id") long id, @ModelAttribute User user, @ModelAttribute Phone phone) {
+        User u = userService.selectById(User.class, user.getId());
+        u.setPhones(userService.set((Phone) phoneService.selectByData(Phone.class, phone.getPhone())));
+        userService.bind(u);
+    }
+
+    @RequestMapping(value = "edit-password", method = RequestMethod.POST)
+    public void edit(@RequestParam("id") long id, @ModelAttribute User user) {
+        User u = userService.selectById(User.class, id);
         if (user.getConfirmPassword().equals(user.getPassword())) {
-            service.edit(id, user);
-            model.addAttribute("user", service.select(id));
-            return "redirect:user";
-        } else {
-            return "update";
+            u.setPassword(userService.passwordEncoder(user.getPassword()));
+            userService.edit(u);
         }
     }
 
     @RequestMapping(value = "edit-role", method = RequestMethod.POST)
-    public String editRole(@RequestParam("id") long id, @RequestParam("role") String role) {
-        service.edit(id, role);
-        return "redirect:admin";
+    public void edit(@RequestParam("id") long id, @RequestParam("role") String role) {
+        User u = userService.selectById(User.class, id);
+        if (role.equals("admin")) {
+            u.setRoles(userService.set(roleService.selectById(Role.class, 1L)));
+            userService.bind(u); // admin
+        } else if (role.equals("user")) {
+            u.setRoles(userService.set(roleService.selectById(Role.class, 2L)));
+            userService.bind(u); // user
+        }
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public String delete(long id) {
-        service.delete(id);
-        return "redirect:admin";
+    public void delete(long id) {
+        userService.delete(User.class, id);
     }
 }

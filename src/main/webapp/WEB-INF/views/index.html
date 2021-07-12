@@ -1,57 +1,13 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      lang="ru_RU">
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
-    <title></title>
-</head>
-<body class="bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg'); height: 100vh">
-<!-- MDB -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
-<nav class="navbar sticky-top navbar-dark bg-dark">
-    <div class="container-fluid">
-        <ul class="list-inline me-auto mb-2 mb-lg-0 mx-3">
-            <li class="list-inline-item">
-                <a th:href="@{/user}" class="btn btn-primary btn-sm m" role="button">Open profile</a>
-            </li>
-            <li class="list-inline-item">
-                <a th:href="@{/admin}" class="btn btn-primary btn-sm" role="button">Login as admin</a>
-            </li>
-            <li class="list-inline-item">
-                <a th:href="@{/registration}" class="btn btn-primary btn-sm" role="button">Registration</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav flex-row">
-            <li class="nav-item me-3 me-lg-1">
-                <a class="nav-link d-sm-flex align-items-sm-center" href="#">
-                    <img src="https://mdbootstrap.com/img/new/avatars/1.jpg"
-                         class="rounded-circle"
-                         height="22"
-                         alt=""
-                         loading="lazy"/>
-                        <span th:if="${login} == null" th:text="${'Welcome, Guest! Glad to see you again'}"></span>
-                        <span th:if="${login} != null" th:text="${'Welcome, ' + login+'! Glad to see you again'}"></span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div th:replace="~{fragment/head::head}"></div>
+<div th:replace="~{fragment/menu::menu}"></div>
 <div class="container">
     <div class="row h-100 justify-content-center align-items-center mx-auto my-5">
-        <div class="col-md-10 p-5 text-center mb-5 text-white">
+        <div class="col-md-12 p-5 text-center mb-5">
             <th:block th:each="msg : ${messages}">
                 <h1 class="display-6" th:text="${msg}"></h1>
             </th:block>
+            <button th:if="${login} == null" type="button" class="btn btn-outline-danger btn-lg" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop1" th:text="${'Registry'}"></button>
+            <div th:replace="~{fragment/modal::admin-registry-modal}"></div>
         </div>
     </div>
 </div>

@@ -1,11 +1,12 @@
-package org.course.model;
+package org.course.model.permission;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.course.model.Model;
+import org.course.model.user.User;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,18 +15,19 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "roles")
-public class Role implements Serializable, GrantedAuthority {
+public class Role extends Model implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    protected long id;
+
+    @Column(name = "role")
     private String role;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
-    public Role(long id, String role) {
-        this.id = id;
+    public Role(String role){
         this.role = role;
     }
 

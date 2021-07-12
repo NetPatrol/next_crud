@@ -1,11 +1,11 @@
 package org.course.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,14 +15,14 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
-@Import({PersistenceConfig.class})
+//@Import({PersistenceConfig.class})
 @ComponentScan(basePackages="org.course")
 @EnableWebMvc
 @EnableTransactionManagement
 public class WebConfiguration implements WebMvcConfigurer{
 
 	private final ApplicationContext applicationContext;
-
+	@Autowired
 	public WebConfiguration(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
@@ -40,7 +40,7 @@ public class WebConfiguration implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
-	
+
 	@Bean
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
@@ -56,9 +56,4 @@ public class WebConfiguration implements WebMvcConfigurer{
 		resolver.setCharacterEncoding("UTF-8");
 		registry.viewResolver(resolver);
 	}
-
-//	@Bean
-//	public UserDetailsService getUserDetailsService(){
-//		return new UserDetailsServiceImpl();
-//	}
 }

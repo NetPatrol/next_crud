@@ -1,0 +1,59 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="list-profile">
+    <table class="table table-hover table-sm shadow-lg p-3 mb-5 bg-white rounded">
+        <thead>
+        <tr class="head-tr table-dark">
+            <td><b><span th:text="'Id'" hidden></span></b></td>
+            <td><b><span th:text="'Name'"></span></b></td>
+            <td><b><span th:text="'Last name'"></span></b></td>
+            <td><b><span th:text="'Email(login)'"></span></b></td>
+            <td><b><span th:text="'Phone'"></span></b></td>
+            <td><b><span th:text="'Role'"></span></b></td>
+            <td><b><span th:text="'Status'"></span></b></td>
+            <td><b><span th:text="'Edit profile'"></span></b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-light" th:each="account, itemStat : ${accounts}">
+
+            <td><span th:text="${account.id}" hidden></span></td>
+
+            <td><span th:text="${account.name}"></span></td>
+
+            <td><span th:text="${account.lastName}"></span></td>
+
+            <td><span th:text="${account.login}"> </span></td>
+
+            <td>
+                <strong th:each="tel : ${account.phones}">
+                    <span th:text="${tel.phone}"></span>
+                </strong>
+            </td>
+
+            <td>
+                <strong th:each="role : ${account.roles}" th:switch="${role.role}">
+                    <span th:case="${'ROLE_ADMIN'}" th:text="${'administrator'}"></span>
+                    <span th:case="${'ROLE_USER'}" th:text="${'user'}"></span>
+                </strong>
+            </td>
+
+            <td>
+                <label>
+                    online
+                </label>
+            </td>
+
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop" th:text="${'Edit profile'}"></button>
+                <div th:replace="~{fragment/modal::admin-edit-modal}"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+<!--th:action="@{'delete?id={id}'(id=${user.id})}" th:object="${user}"-->
+
+<td>
+    <form th:method="POST" th:action="@{'delete?id={id}'(id=${user.getId()})}" th:object="${account}">
+        <input type="submit" class="btn btn-primary btn-sm" role="button" th:text="delete">
+    </form>
+</td>
