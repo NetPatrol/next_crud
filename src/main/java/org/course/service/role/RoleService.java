@@ -1,4 +1,4 @@
-package org.course.service.Role;
+package org.course.service.role;
 
 import org.course.dao.dao.descendants.RoleDao;
 
