@@ -48,12 +48,6 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     @Transactional
-    public <E extends Model> void edit(E obj) {
-        dao.edit(obj);
-    }
-
-    @Override
-    @Transactional
     public void delete(Class<Role> cls, long id) {
         dao.delete(cls, id);
     }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> {
+public abstract class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> {
 
     @Override
     public List<T> selectAll(Class<T> cls) {
@@ -35,11 +35,18 @@ public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> 
 
     @Override
     public T selectById(Class<T> cls, long id) {
-        return entityManager.find(cls, id);
+        if (cls == User.class) {
+            return entityManager.createQuery("from User u join fetch u.roles join fetch u.phones WHERE u.id = :id", cls)
+            .setParameter("id", id)
+            .getSingleResult();
+        } else {
+            return entityManager.find(cls, id);
+        }
+
     }
 
     @Override
-    public Model selectByData(Class<T> cls, String s) {
+    public T selectByData(Class<T> cls, String s) {
         if (cls == User.class) {
             return entityManager.createQuery("from User u WHERE u.login = :login", cls)
             .setParameter("login", s)
@@ -61,16 +68,12 @@ public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> 
         if (obj.getClass() == User.class) {
             User user = (User) obj;
             (user).setRoles(set(roleDao.selectById(Role.class, 2L)));
-            (user).setPassword(passwordEncoder(user.getPassword()));
+            (user).setPassword(userDao.passwordEncoder(user.getPassword()));
             entityManager.persist(user);
             entityManager.flush();
         } else {
             entityManager.persist(obj);
         }
-    }
-
-    public String passwordEncoder(String pass) {
-         return passwordEncoder.encode(pass);
     }
 
     @Override
@@ -83,12 +86,6 @@ public class MySqlDaoImpl<T extends Model> extends Dependency implements Dao<T> 
     @Override
     public void bind(User user) {
         entityManager.merge(user);
-        entityManager.flush();
-    }
-
-    @Override
-    public <E extends Model> void edit(E obj) {
-        entityManager.merge(obj);
         entityManager.flush();
     }
 

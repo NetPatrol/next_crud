@@ -1,0 +1,44 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="tab-accounts">
+
+    <table class="table table-hover table-sm shadow-lg p-3 mb-5 bg-white rounded">
+        <thead>
+        <tr class="head-tr table-dark">
+            <td><b><span th:text="'Name'"></span></b></td>
+            <td><b><span th:text="'Last name'"></span></b></td>
+            <td><b><span th:text="'Email(login)'"></span></b></td>
+            <td><b><span th:text="'Phone'"></span></b></td>
+            <td><b><span th:text="'Role'"></span></b></td>
+            <td><b><span th:text="'Edit profile'"></span></b></td>
+            <td><b><span th:text="'Delete profile'"></span></b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="u, itemStat : ${accounts}">
+        <tr class="table-light table-hover" th:id="${u.id}">
+            <td><span th:text="${u.name}"></span></td>
+            <td><span th:text="${u.lastName}"></span></td>
+            <td><span th:text="${u.login}"> </span></td>
+            <td>
+                <strong th:each="tel : ${u.phones}">
+                    <span th:text="${tel.phone}"></span>
+                </strong>
+            </td>
+            <td>
+                <strong th:each="role : ${u.roles}" th:switch="${role.role}">
+                    <span th:case="${'ROLE_ADMIN'}" th:text="${'administrator'}"></span>
+                    <span th:case="${'ROLE_USER'}" th:text="${'user'}"></span>
+                </strong>
+            </td>
+            <td>
+                <a th:href="@{'/admin/edit/{id}'(id=${u.id})}" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+            <td>
+                <form th:method="POST" th:action="@{'/accountDelete?id={id}'(id=${u.getId()})}" th:object="${account}">
+                    <input type="submit" class="btn btn-primary btn-sm" role="button" th:value="Delete"/>
+                </form>
+            </td>
+        </tr>
+        </th:block>
+        </tbody>
+    </table>
+</th:block>

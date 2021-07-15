@@ -57,10 +57,13 @@ public class UserServiceImpl implements UserService {
         return dao.selectByData(cls, s);
     }
 
-    @Override
     @Transactional
-    public <E extends Model> void edit(E user) {
-        dao.edit(user);
+    @Override
+    public void edit(long id, User user) {
+        if (user != null) {
+            dao.edit(id, user);
+        }
+
     }
 
     @Override

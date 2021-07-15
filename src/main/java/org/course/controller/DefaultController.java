@@ -14,8 +14,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("")
@@ -41,13 +39,15 @@ public class DefaultController {
 
     private String login;
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public String getWelcomePage(ModelMap model) {
-        List<String> messages = new ArrayList<>();
-        messages.add("Hello!");
-        messages.add("Spring MVC-SECURITY application");
-        model.addAttribute("messages", messages);
-        model.addAttribute("login", login);
+        model.addAttribute("phone", new Phone());
+        model.addAttribute("user", new User());
+        return "index";
+    }
+
+    @GetMapping(value = "/")
+    public String index(ModelMap model) {
         model.addAttribute("phone", new Phone());
         model.addAttribute("user", new User());
         return "index";
@@ -58,37 +58,30 @@ public class DefaultController {
         return "login";
     }
 
-    @GetMapping(value = "/admin")
+    @GetMapping(value = "/admin/profile")
     public String getAdminPage(Principal principal, ModelMap modelMap, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
         model.addAttribute("account", userService.selectForAutorize(login));
         modelMap.addAttribute("accounts", userService.selectAll(User.class));
-        model.addAttribute("user", new User());
         model.addAttribute("phone", new Phone());
-        return "admin";
+        model.addAttribute("user", new User());
+        return "admin/profile";
     }
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/user/profile")
     public String getUserPage(Principal principal, Model model) {
         this.login = principal.getName();
         model.addAttribute("login", login);
         model.addAttribute("account", userService.selectForAutorize(login));
-        return "user";
+        return "user/profile";
     }
 
-    @GetMapping(value = "/registry")
-    public String getRegistryPage(Model model) {
-        model.addAttribute("phone", new Phone());
-        model.addAttribute("user", new User());
-        return "modal";
-    }
-
-    @RequestMapping(value = "registry", method = RequestMethod.POST)
-    public String registration(@ModelAttribute User user,
+    @RequestMapping(value = "/admin/registry", method = {RequestMethod.POST})
+    public String registry(@ModelAttribute User user,
                              @ModelAttribute Phone phone, Model model) throws Exception {
-        model.addAttribute("phone", new Phone());
         model.addAttribute("user", new User());
+        model.addAttribute("phone", new Phone());
         try {
             if (user.getPassword().equals(user.getConfirmPassword())) {
                 userService.save(user);
@@ -100,48 +93,61 @@ public class DefaultController {
         } catch (Exception e) {
             throw new Exception("Ошибка создания профиля");
         }
-        return  !login.isEmpty() ? "redirect:/admin" : "redirect:index";
+        return "redirect:/admin/profile";
     }
 
-
-    @GetMapping(value = "/update/{id}")
-    public String getPasswordUpdateForm(@PathVariable long id, Model model) {
-        model.addAttribute("user", userService.selectById(User.class, id));
-        model.addAttribute("create", new User());
-        return "modal";
-    }
-
-    @RequestMapping(value = "add-phone", method = RequestMethod.POST)
-    public String add(@RequestParam("id") long id, @ModelAttribute User user, @ModelAttribute Phone phone) {
-        User u = userService.selectById(User.class, user.getId());
-        u.setPhones(userService.set((Phone) phoneService.selectByData(Phone.class, phone.getPhone())));
-        userService.bind(u);
-        return  !login.isEmpty() ? "redirect:/admin" : "redirect:index";
-    }
-
-    @RequestMapping(value = "edit-password", method = RequestMethod.POST)
-    public void edit(@RequestParam("id") long id, @ModelAttribute User user) {
+    @RequestMapping(value = "/admin/edit/{id}")
+    public String user(@PathVariable("id") long id, ModelMap modelMap, Model model) {
+        model.addAttribute("login", login);
+        model.addAttribute("account", userService.selectForAutorize(login));
         User u = userService.selectById(User.class, id);
-        if (user.getConfirmPassword().equals(user.getPassword())) {
-            u.setPassword(userService.passwordEncoder(user.getPassword()));
-            userService.edit(u);
-        }
+        modelMap.addAttribute("user", u);
+        modelMap.addAttribute("newPhone", new Phone());
+        modelMap.addAttribute("newUser", new User());
+        return "admin/edit";
     }
 
-    @RequestMapping(value = "edit-role", method = RequestMethod.POST)
-    public void edit(@RequestParam("id") long id, @RequestParam("role") String role) {
+    @RequestMapping(value = "editUser", method = {RequestMethod.POST})
+    public String editUser(@RequestParam("id") long id, @ModelAttribute User user) {
+        userService.edit(id, user);
+        return "redirect:/admin/edit/" + id;
+    }
+
+    @RequestMapping(value = "editPhone", method = {RequestMethod.POST})
+    public String addPhone(@RequestParam("id") long id, @ModelAttribute Phone phone) {
+        User u = userService.selectById(User.class, id);
+        for (Phone p : u.getPhones()) {
+            if (!phone.getPhone().equals("")) {
+                phoneService.edit(p.getId(), phone);
+            }
+        }
+        return "redirect:/admin/edit/" + id;
+//        u.setPhones(userService.set((Phone) phoneService.selectByData(Phone.class, phone.getPhone())));
+//        userService.bind(u);
+    }
+
+    @RequestMapping(value = "editRole", method = {RequestMethod.POST})
+    public String edit(@RequestParam("id") long id, @RequestParam("role") String role) {
         User u = userService.selectById(User.class, id);
         if (role.equals("admin")) {
             u.setRoles(userService.set(roleService.selectById(Role.class, 1L)));
-            userService.bind(u); // admin
+            userService.bind(u);
         } else if (role.equals("user")) {
             u.setRoles(userService.set(roleService.selectById(Role.class, 2L)));
-            userService.bind(u); // user
+            userService.bind(u);
         }
+        return "redirect:/admin/edit/" + id;
     }
 
-    @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public void delete(long id) {
+    @RequestMapping(value = "accountDelete", method = {RequestMethod.POST})
+    public String delete(@RequestParam("id") long id, @ModelAttribute User user) {
         userService.delete(User.class, id);
+        return "redirect:/admin/profile";
+    }
+
+    @RequestMapping(value = "phoneDelete", method = {RequestMethod.POST})
+    public String phoneDelete(@ModelAttribute Phone phone) {
+        phoneService.delete(Phone.class, phone.getId());
+        return "redirect:/admin/profile";
     }
 }

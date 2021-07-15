@@ -15,8 +15,6 @@ public interface Dao<T extends Model> {
 
     Model selectByData(Class<T> cls, String s);
 
-    <E extends Model> void edit(E obj);
-
     void delete(Class<T> cls, long id);
 
     <E extends Model> void bind(User user);

@@ -48,8 +48,10 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     @Transactional
-    public <E extends Model> void edit(E phone) {
-       dao.edit(phone);
+    public void edit(long id, Phone phone) {
+        if (phone != null) {
+            dao.edit(id, phone);
+        }
     }
 
     @Override

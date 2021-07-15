@@ -2,6 +2,7 @@ package org.course.dao.implementing.mySql.Dependency;
 
 import org.course.dao.dao.descendants.PhoneDao;
 import org.course.dao.dao.descendants.RoleDao;
+import org.course.dao.dao.descendants.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,5 +32,11 @@ public class Dependency {
     @Autowired
     public void setRoleDao(@Qualifier("phoneMySqlDaoImpl") PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
+    }
+
+    protected UserDao userDao;
+    @Autowired
+    public void setRoleDao(@Qualifier("userMySqlDaoImpl") UserDao userDao) {
+        this.userDao = userDao;
     }
 }

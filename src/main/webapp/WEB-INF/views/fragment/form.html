@@ -1,0 +1,59 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="registry">
+    <form th:method="POST" th:action="@{registry}" th:id="registry">
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="name">Name: </label>
+            <div class="col-sm-8">
+                <input class="form-control" id="name" type="text" th:field="*{user.name}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="last">Last name:</label>
+            <div class="col-sm-8">
+                <input class="form-control" id="last" type="text" th:field="*{user.lastName}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="login">Login:</label>
+            <div class="col-sm-8">
+                <input type="email" class="form-control" id="login" th:field="*{user.login}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="password">Password:</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" id="password" th:field="*{user.password}">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="confirm">Confirm password:</label>
+            <div class="col-sm-8">
+                <input type="password" class="form-control" id="confirm" th:field="*{user.confirmPassword}">
+            </div>
+        </div>
+
+        <h5 class="card-header mb-3">Add phone number</h5>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="phone">Phone number:</label>
+            <div class="col-sm-8">
+                <input type="tel" class="form-control mb-3" id="phone" th:field="*{phone.phone}">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <table>
+            <tr>
+                <td class="p-3">
+                    <button type="reset" class="btn btn-primary" th:hame="user" th:valuetype="${user}" th:form="registry">Clean</button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" type="submit" th:form="registry">Registry</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</th:block>
